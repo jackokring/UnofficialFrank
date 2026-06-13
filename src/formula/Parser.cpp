@@ -12,7 +12,6 @@
 #include "Parser.h"
 
 #include <math.h>
-#include <iostream>
 #include <time.h>
 
 
@@ -33,6 +32,9 @@ float ParserTime()
 
 Parser::Parser(std::string expression)
 {
+   	//============================================
+	// functions
+	//============================================
 	setFunction("acos", acosf);
 	setFunction("asin", asinf);
 	setFunction("atan", atanf);
@@ -55,6 +57,7 @@ Parser::Parser(std::string expression)
 	setFunction("floor", floorf);
 	setFunction("max", ParserMax);
 	setFunction("min", ParserMin);
+
 
 	setExpression(expression);
 }

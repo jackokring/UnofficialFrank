@@ -53,6 +53,9 @@ struct FrankBussFormulaModule : Module {
 	dsp::SchmittTrigger b0Trigger;
 	dsp::SchmittTrigger b1Trigger;
 
+	//============================================
+	// variable pointers
+	//============================================
 	float* formulaP = NULL;
 	float* formulaK = NULL;
 	float* formulaB = NULL;
@@ -61,13 +64,8 @@ struct FrankBussFormulaModule : Module {
 	float* formulaY = NULL;
 	float* formulaZ = NULL;
 
-	float* freqFormulaP = NULL;
-	float* freqFormulaK = NULL;
-	float* freqFormulaB = NULL;
-	float* freqFormulaW = NULL;
-	float* freqFormulaX = NULL;
-	float* freqFormulaY = NULL;
-	float* freqFormulaZ = NULL;
+	// new
+	float* formulaC = NULL;// channel index
 
 	FrankBussFormulaModule() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -80,16 +78,16 @@ struct FrankBussFormulaModule : Module {
 		configParam(FrankBussFormulaModule::KNOB_PARAM, -1.0f, 1.0f, 0.0f, "Variable 'k'");
 		// configParam(FrankBussFormulaModule::CLAMP_PARAM, 0.0f, 1.0f, 0.0f, "");
 		configButton(CLAMP_PARAM, "Clamp to -5V/+5V");
-		
+
 		configLight(ERROR_LIGHT, "Status:\n  green light: ok\n  red blinking light: error\n  -------------------------------\n ");
-		
+
 		configInput(X_INPUT, "Variable 'x'");
 		configInput(Y_INPUT, "Variable 'y'");
 		configInput(Z_INPUT, "Variable 'z'");
 		configInput(W_INPUT, "Variable 'w'");
 		configOutput(FORMULA_OUTPUT, "Result");
 	}
-	
+
 	int getMaxChannels() {
 		int channels = inputs[W_INPUT].getChannels();
 		channels = max(channels, inputs[X_INPUT].getChannels());
@@ -105,14 +103,14 @@ struct FrankBussFormulaModule : Module {
 		}
 		if (bMinus1Trigger.process(params[B_MINUS_1_PARAM].getValue())) {
 			radiobutton = -1.0f;
-		}	
+		}
 		if (b0Trigger.process(params[B_0_PARAM].getValue())) {
 			radiobutton = 0.0f;
 		}
 		if (b1Trigger.process(params[B_1_PARAM].getValue())) {
 			radiobutton = 1.0f;
 		}
-		
+
 		float deltaTime = args.sampleTime;
 
 		// evaluate frequency and output formula
@@ -125,7 +123,7 @@ struct FrankBussFormulaModule : Module {
 					float x = inputs[X_INPUT].getVoltage(c);
 					float y = inputs[Y_INPUT].getVoltage(c);
 					float z = inputs[Z_INPUT].getVoltage(c);
-					
+
 					// knob
 					float k = params[KNOB_PARAM].getValue();
 
@@ -138,14 +136,10 @@ struct FrankBussFormulaModule : Module {
 					*formulaY = y;
 					*formulaZ = z;
 
+					// new
+					*formulaC = c;// assign channel index to formulaC
+
 					if (freqFormulaEnabled) {
-						*freqFormulaP = phase[c];
-						*freqFormulaK = k;
-						*freqFormulaB = radiobutton;
-						*freqFormulaW = w;
-						*freqFormulaX = x;
-						*freqFormulaY = y;
-						*freqFormulaZ = z;
 						float freq = evalFormula(freqFormula);
 						phase[c] += freq * args.sampleTime;
 						if (phase[c] > 1.0f) phase[c] -= 1.0f;
@@ -188,9 +182,12 @@ struct FrankBussFormulaModule : Module {
 	}
 
 	void parseFormula(Formula& formula, std::string expr) {
+		//============================================
+		// variable definition defaults
+		//============================================
 		formula.setVariable("pi", M_PI);
 		formula.setVariable("e", M_E);
-		
+
 		formula.setVariable("p", 0);
 		formula.setVariable("k", 0);
 		formula.setVariable("b", 0);
@@ -198,6 +195,9 @@ struct FrankBussFormulaModule : Module {
 		formula.setVariable("x", 0);
 		formula.setVariable("y", 0);
 		formula.setVariable("z", 0);
+
+		// new
+		formula.setVariable("c", 0);// channel index
 
 		formula.setExpression(expr);
 	}
@@ -221,7 +221,10 @@ struct FrankBussFormulaModule : Module {
 					parseFormula(freqFormula, freqField);
 					freqFormulaEnabled = true;
 				}
-				
+
+				//============================================
+				// variable pointer assignments for DSP fill
+				//============================================
 				formulaP = formula.getVariableAddress("p");
 				formulaK = formula.getVariableAddress("k");
 				formulaB = formula.getVariableAddress("b");
@@ -230,30 +233,12 @@ struct FrankBussFormulaModule : Module {
 				formulaY = formula.getVariableAddress("y");
 				formulaZ = formula.getVariableAddress("z");
 
-				if (freqFormulaEnabled) {
-					freqFormulaP = freqFormula.getVariableAddress("p");
-					freqFormulaK = freqFormula.getVariableAddress("k");
-					freqFormulaB = freqFormula.getVariableAddress("b");
-					freqFormulaW = freqFormula.getVariableAddress("w");
-					freqFormulaX = freqFormula.getVariableAddress("x");
-					freqFormulaY = freqFormula.getVariableAddress("y");
-					freqFormulaZ = freqFormula.getVariableAddress("z");
-				}
-				
 				compiled = true;
 			} catch (exception& e) {
 				printf("formula exception: %s\n", e.what());
 			}
 		}
 	}
-
-	// void onAdd(const AddEvent &e) override
-	// {
-		// textField = "";
-		// freqField = "";
-		// compile();
-		// dirty = true;
-	// }
 
 	void onReset (const ResetEvent &e) override
 	{
@@ -283,7 +268,7 @@ struct FrankBussFormulaModule : Module {
 
 		json_t *clampJ = json_object_get(rootJ, "clamp");
 		if (clampJ) doclamp = json_is_true(clampJ);
-		
+
 		json_t *buttonJ = json_object_get(rootJ, "button");
 		if (buttonJ) radiobutton = json_real_value(buttonJ);
 
@@ -302,19 +287,19 @@ enum TextFieldType {
 struct FormulaTextField : LedDisplayTextField {
 	FrankBussFormulaModule* module;
 	TextFieldType type;
-	
+
 	FormulaTextField() : LedDisplayTextField() {
 		bgColor = nvgRGB(0x00, 0x00, 0x00);
 	}
-	
+
 	void setModule(FrankBussFormulaModule* module) {
 		this->module = module;
 	}
-	
+
 	void setTextFieldType(TextFieldType type) {
 		this->type = type;
 	}
-	
+
     void onChange(const event::Change &e) override {
 		if (module) {
 			if (type == TEXT) {
@@ -325,7 +310,7 @@ struct FormulaTextField : LedDisplayTextField {
 			module->compile();
 		}
 	}
-	
+
 	void step() override {
 		LedDisplayTextField::step();
 		if (module && (module->textDirty || module->freqDirty)) {
@@ -343,7 +328,7 @@ struct FormulaTextField : LedDisplayTextField {
 struct FrankBussFormulaWidget : ModuleWidget {
 	FormulaTextField* textField;
 	FormulaTextField* freqField;
-	
+
 	FrankBussFormulaWidget(FrankBussFormulaModule *module) {
 		setModule(module);
 
@@ -376,7 +361,7 @@ struct FrankBussFormulaWidget : ModuleWidget {
 
 		addParam(createParam<LEDButton>(Vec(30, 260), module, FrankBussFormulaModule::B_MINUS_1_PARAM));
 		addChild(createLight<MediumLight<GreenLight>>(Vec(34.4f, 264.4f), module, FrankBussFormulaModule::B_MINUS_1_LIGHT));
-		
+
 		addParam(createParam<LEDButton>(Vec(75, 260), module, FrankBussFormulaModule::B_0_PARAM));
 		addChild(createLight<MediumLight<GreenLight>>(Vec(79.4f, 264.4f), module, FrankBussFormulaModule::B_0_LIGHT));
 

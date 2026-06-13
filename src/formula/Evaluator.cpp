@@ -119,7 +119,10 @@ void EqualAction::run(NumberStack& numberStack)
 {
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
-	numberStack.push(op1 == op2);
+	//============================================
+	// equality overlap of floats
+	//============================================
+	numberStack.push(max(1.0f - abs(op1 - op2), 0.0f));// a flexible float equality test
 	checkTopStackElement(numberStack);
 }
 
@@ -127,7 +130,10 @@ void NotEqualAction::run(NumberStack& numberStack)
 {
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
-	numberStack.push(op1 != op2);
+	//============================================
+	// inequality overlap of floats
+	//============================================
+	numberStack.push(min(abs(op1 - op2), 1.0f));// a flexible float inequality test
 	checkTopStackElement(numberStack);
 }
 
