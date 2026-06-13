@@ -1,4 +1,6 @@
-# VCV Rack modules by Frank Buss
+# Under Editing! Simon Jackson
+
+## VCV Rack modules by Frank Buss
 
 ![alt text](docs/formula.png "Formula")
 
