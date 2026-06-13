@@ -56,16 +56,16 @@ struct FrankBussFormulaModule : Module {
 	//============================================
 	// variable pointers
 	//============================================
-	float* formulaP = NULL;
-	float* formulaK = NULL;
-	float* formulaB = NULL;
-	float* formulaW = NULL;
-	float* formulaX = NULL;
-	float* formulaY = NULL;
-	float* formulaZ = NULL;
+	float* formulaP[2] = {NULL, NULL};
+	float* formulaK[2] = {NULL, NULL};
+	float* formulaB[2] = {NULL, NULL};
+	float* formulaW[2] = {NULL, NULL};
+	float* formulaX[2] = {NULL, NULL};
+	float* formulaY[2] = {NULL, NULL};
+	float* formulaZ[2] = {NULL, NULL};
 
 	// new
-	float* formulaC = NULL;// channel index
+	float* formulaC[2] = {NULL, NULL};// channel index
 
 	FrankBussFormulaModule() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -128,18 +128,32 @@ struct FrankBussFormulaModule : Module {
 					float k = params[KNOB_PARAM].getValue();
 
 					// set all variables
-					*formulaP = phase[c];
-					*formulaK = k;
-					*formulaB = radiobutton;
-					*formulaW = w;
-					*formulaX = x;
-					*formulaY = y;
-					*formulaZ = z;
+					*formulaP[0] = phase[c];
+					*formulaK[0] = k;
+					*formulaB[0] = radiobutton;
+					*formulaW[0] = w;
+					*formulaX[0] = x;
+					*formulaY[0] = y;
+					*formulaZ[0] = z;
 
 					// new
-					*formulaC = c;// assign channel index to formulaC
+					*formulaC[0] = c;// assign channel index to formulaC
 
 					if (freqFormulaEnabled) {
+					    //==========================
+						// spanner frequency formula
+						//==========================
+	                    *formulaP[1] = phase[c];
+						*formulaK[1] = k;
+						*formulaB[1] = radiobutton;
+						*formulaW[1] = w;
+						*formulaX[1] = x;
+						*formulaY[1] = y;
+						*formulaZ[1] = z;
+
+						// new
+						*formulaC[1] = c;
+
 						float freq = evalFormula(freqFormula);
 						phase[c] += freq * args.sampleTime;
 						if (phase[c] > 1.0f) phase[c] -= 1.0f;
@@ -225,13 +239,32 @@ struct FrankBussFormulaModule : Module {
 				//============================================
 				// variable pointer assignments for DSP fill
 				//============================================
-				formulaP = formula.getVariableAddress("p");
-				formulaK = formula.getVariableAddress("k");
-				formulaB = formula.getVariableAddress("b");
-				formulaW = formula.getVariableAddress("w");
-				formulaX = formula.getVariableAddress("x");
-				formulaY = formula.getVariableAddress("y");
-				formulaZ = formula.getVariableAddress("z");
+				formulaP[0] = formula.getVariableAddress("p");
+				formulaK[0] = formula.getVariableAddress("k");
+				formulaB[0] = formula.getVariableAddress("b");
+				formulaW[0] = formula.getVariableAddress("w");
+				formulaX[0] = formula.getVariableAddress("x");
+				formulaY[0] = formula.getVariableAddress("y");
+				formulaZ[0] = formula.getVariableAddress("z");
+
+				// new
+				formulaC[0] = formula.getVariableAddress("c");
+
+				if(freqFormulaEnabled) {
+				    //============================================
+					// get frequency formula vars to spanner
+					//============================================
+					formulaP[1] = freqFormula.getVariableAddress("p");
+					formulaK[1] = freqFormula.getVariableAddress("k");
+					formulaB[1] = freqFormula.getVariableAddress("b");
+					formulaW[1] = freqFormula.getVariableAddress("w");
+					formulaX[1] = freqFormula.getVariableAddress("x");
+					formulaY[1] = freqFormula.getVariableAddress("y");
+					formulaZ[1] = freqFormula.getVariableAddress("z");
+
+					// new
+					formulaC[1] = freqFormula.getVariableAddress("c");
+				}
 
 				compiled = true;
 			} catch (exception& e) {
