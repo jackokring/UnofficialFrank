@@ -1,5 +1,5 @@
 #include "UnofficialFrank.hpp"
-#include "app/common.hpp"
+#include "app/ModuleWidget.hpp"
 #include <cmath>
 #include "formula/Formula.h"
 
@@ -379,28 +379,26 @@ struct FrankBussFormulaWidget : ModuleWidget {
 		freqField->multiline = false;
 		addChild(freqField);
 
-		addParam(createParam<LEDButton>(Vec(30, 260), module, FrankBussFormulaModule::B_MINUS_1_PARAM));
-		addChild(createLight<MediumLight<GreenLight>>(Vec(34.4f, 264.4f), module, FrankBussFormulaModule::B_MINUS_1_LIGHT));
+		button(this, module, hpu(1.5f, 2.5f), FrankBussFormulaModule::B_MINUS_1_PARAM
+			, FrankBussFormulaModule::B_MINUS_1_LIGHT, "-1");
+		button(this, module, hpu(2.0f, 2.25f), FrankBussFormulaModule::B_0_PARAM
+			, FrankBussFormulaModule::B_0_LIGHT, "0");
+		button(this, module, hpu(2.5f, 2.5f), FrankBussFormulaModule::B_1_PARAM
+			, FrankBussFormulaModule::B_1_LIGHT, "1");
 
-		addParam(createParam<LEDButton>(Vec(75, 260), module, FrankBussFormulaModule::B_0_PARAM));
-		addChild(createLight<MediumLight<GreenLight>>(Vec(79.4f, 264.4f), module, FrankBussFormulaModule::B_0_LIGHT));
+		knob(this, module, hpu(3.0f, 2.365f), FrankBussFormulaModule::KNOB_PARAM, "KNOB");
 
-		addParam(createParam<LEDButton>(Vec(120, 260), module, FrankBussFormulaModule::B_1_PARAM));
-		addChild(createLight<MediumLight<GreenLight>>(Vec(124.4f, 264.4f), module, FrankBussFormulaModule::B_1_LIGHT));
+		okNo(this, module, hpu(5.5f, 2.25f), FrankBussFormulaModule::ERROR_LIGHT, "ERROR");
 
-		addParam(createParam<RoundLargeBlackKnob>(Vec(170, 240), module, FrankBussFormulaModule::KNOB_PARAM));
+		button(this, module, hpu(5.5f, 2.5f), FrankBussFormulaModule::CLAMP_PARAM
+			, FrankBussFormulaModule::CLAMP_LIGHT, "CLAMP");
 
-		addChild(createLight<MediumLight<GreenRedLight>>(Vec(240, 240), module, FrankBussFormulaModule::ERROR_LIGHT));
-
-		addInput(createInput<PJ301MPort>(Vec(20, 310), module, FrankBussFormulaModule::W_INPUT));
-		addInput(createInput<PJ301MPort>(Vec(60, 310), module, FrankBussFormulaModule::X_INPUT));
-		addInput(createInput<PJ301MPort>(Vec(100, 310), module, FrankBussFormulaModule::Y_INPUT));
-		addInput(createInput<PJ301MPort>(Vec(140, 310), module, FrankBussFormulaModule::Z_INPUT));
-
-		addParam(createParam<LEDButton>(Vec(190, 314), module, FrankBussFormulaModule::CLAMP_PARAM));
-		addChild(createLight<MediumLight<GreenLight>>(Vec(194.4f, 318.4f), module, FrankBussFormulaModule::CLAMP_LIGHT));
-
-		addOutput(createOutput<PJ301MPort>(Vec(220, 310), module, FrankBussFormulaModule::FORMULA_OUTPUT));
+		// bottomn row of ports
+		port(this, module, hpu(1.5f, 2.75f), FrankBussFormulaModule::W_INPUT, true, "W");
+		port(this, module, hpu(2.5f, 2.75f), FrankBussFormulaModule::X_INPUT, true, "X");
+		port(this, module, hpu(3.5f, 2.75f), FrankBussFormulaModule::Y_INPUT, true, "Y");
+		port(this, module, hpu(4.5f, 2.75f), FrankBussFormulaModule::Z_INPUT, true, "Z");
+		port(this, module, hpu(5.5f, 2.75f), FrankBussFormulaModule::FORMULA_OUTPUT, false, "OUT");
 	}
 };
 
