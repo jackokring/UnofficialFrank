@@ -1,5 +1,6 @@
 #include "UnofficialFrank.hpp"
 #include "app/ModuleWidget.hpp"
+#include "widget/Widget.hpp"
 #include <cmath>
 #include "formula/Formula.h"
 
@@ -347,6 +348,19 @@ struct FormulaTextField : LedDisplayTextField {
 	}
 };
 
+void lcd(Widget* w, FrankBussFormulaModule* m, Vec pos, Vec size,
+    FormulaTextField* field, TextFieldType type, bool multiline) {
+        LedDisplay* textDisplay = createWidget<LedDisplay>(mm2px(pos));
+		textDisplay->box.size = mm2px(size);
+		w->addChild(textDisplay);
+		field = createWidget<FormulaTextField>(mm2px(pos));
+		field->setModule(m);
+		field->setTextFieldType(type);
+		field->box.size = mm2px(size);
+		field->multiline = multiline;
+		w->addChild(field);
+}
+
 #define WIDTH_MODULE 18
 
 struct FrankBussFormulaWidget : ModuleWidget {
@@ -359,25 +373,8 @@ struct FrankBussFormulaWidget : ModuleWidget {
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/formula.svg")));
 		screws(this, WIDTH_MODULE);
 
-		LedDisplay* textDisplay = createWidget<LedDisplay>(mm2px(Vec(3, 13)));
-		textDisplay->box.size = mm2px(Vec(85, 51));
-		addChild(textDisplay);
-		textField = createWidget<FormulaTextField>(mm2px(Vec(3, 13)));
-		textField->setModule(module);
-		textField->setTextFieldType(TEXT);
-		textField->box.size = mm2px(Vec(85, 51));
-		textField->multiline = true;
-		addChild(textField);
-
-		LedDisplay* freqDisplay = createWidget<LedDisplay>(mm2px(Vec(16, 67.5)));
-		freqDisplay->box.size = mm2px(Vec(72, 10));
-		addChild(freqDisplay);
-		freqField = createWidget<FormulaTextField>(mm2px(Vec(16, 67.5)));
-		freqField->setModule(module);
-		freqField->setTextFieldType(FREQ);
-		freqField->box.size = mm2px(Vec(72, 10));
-		freqField->multiline = false;
-		addChild(freqField);
+		lcd(this, module, hpu(0.5f, 0.25f), hpu(6.0f, 1.5f), textField, TEXT, true);
+		lcd(this, module, hpu(1.5f, 2.0f), hpu(5.0f, 0.5f), freqField, FREQ, false);
 
 		button(this, module, hpu(1.5f, 2.5f), FrankBussFormulaModule::B_MINUS_1_PARAM
 			, FrankBussFormulaModule::B_MINUS_1_LIGHT, "-1");
