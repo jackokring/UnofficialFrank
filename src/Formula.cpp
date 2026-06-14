@@ -1,4 +1,5 @@
 #include "UnofficialFrank.hpp"
+#include <cmath>
 #include "formula/Formula.h"
 
 //============================================
@@ -149,7 +150,7 @@ struct FrankBussFormulaModule : Module {
 						fn(FREQ);
 						float freq = evalFormula(freqFormula);
 						phase[c] += freq * args.sampleTime;
-						if (phase[c] > 1.0f) phase[c] -= 1.0f;
+						if (phase[c] > 1.0f) phase[c] = fmodf(phase[c], 1.0f);
 					}
 					float val = evalFormula(formula);
 					if (doclamp) val = clamp(val, -5.0f, 5.0f);

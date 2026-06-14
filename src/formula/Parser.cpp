@@ -30,6 +30,11 @@ float ParserTime()
 	return time(NULL);
 }
 
+float ParserPar(float phase)
+{
+	return 4.0f * phase * (1.0f - phase);
+}
+
 Parser::Parser(std::string expression)
 {
    	//============================================
@@ -58,6 +63,8 @@ Parser::Parser(std::string expression)
 	setFunction("max", ParserMax);
 	setFunction("min", ParserMin);
 
+	// new
+	setFunction("par", ParserPar);
 
 	setExpression(expression);
 }

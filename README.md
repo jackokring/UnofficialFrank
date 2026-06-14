@@ -3,6 +3,7 @@
 Experimental nightly builds only for now. Doc format classic TBD.
 
 - [X] `c` is for channel number
+- [X] `par(p)` is for parabolic phase
 - [X] sloppy equality and inequality testing
 - [X] removed shaker
 - [X] optimized using function closures 
