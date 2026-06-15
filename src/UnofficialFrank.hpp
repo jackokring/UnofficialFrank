@@ -10,8 +10,9 @@ extern Model *modelFrankBussFormula;
 
 // make those precise in hp and u rack units
 float hp(float w, bool mhp = false);
-float u(float h, bool mhp = false);
-Vec hpu(float w, float h, bool mhpw = false, bool mhph = false);
+float u2(float h, bool mhp = false);
+Vec hpu2(float w, float h, bool mhpw = false, bool mhph = false);
+Vec alignedUtil();
 
 void screws(ModuleWidget* widget, float hp);
 

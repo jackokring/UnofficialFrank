@@ -350,18 +350,18 @@ struct FormulaTextField : LedDisplayTextField {
 
 void lcd(Widget* w, FrankBussFormulaModule* m, Vec pos, Vec size,
     FormulaTextField* field, TextFieldType type, bool multiline) {
-        LedDisplay* textDisplay = createWidget<LedDisplay>(mm2px(pos));
-		textDisplay->box.size = mm2px(size);
+        LedDisplay* textDisplay = createWidget<LedDisplay>(pos + alignedUtil());
+		textDisplay->box.size = size;
 		w->addChild(textDisplay);
-		field = createWidget<FormulaTextField>(mm2px(pos));
+		field = createWidget<FormulaTextField>(pos + alignedUtil());
 		field->setModule(m);
 		field->setTextFieldType(type);
-		field->box.size = mm2px(size);
+		field->box.size = size;
 		field->multiline = multiline;
 		w->addChild(field);
 }
 
-#define WIDTH_MODULE 18
+#define WIDTH_MODULE 10
 
 struct FrankBussFormulaWidget : ModuleWidget {
 	FormulaTextField* textField;
@@ -373,29 +373,29 @@ struct FrankBussFormulaWidget : ModuleWidget {
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/formula.svg")));
 		screws(this, WIDTH_MODULE);
 
-		lcd(this, module, hpu(0.5f, 0.25f), hpu(6.0f, 1.5f), textField, TEXT, true);
-		lcd(this, module, hpu(1.5f, 2.0f), hpu(5.0f, 0.5f), freqField, FREQ, false);
+		lcd(this, module, hpu2(0.5f, 1.0f), hpu2(10.0f, 2.5f), textField, TEXT, true);
+		lcd(this, module, hpu2(1.7f, 3.7f), hpu2(8.8f, 0.5f), freqField, FREQ, false);
 
-		button(this, module, hpu(1.5f, 2.5f), FrankBussFormulaModule::B_MINUS_1_PARAM
+		button(this, module, hpu2(1.0f, 5.0f), FrankBussFormulaModule::B_MINUS_1_PARAM
 			, FrankBussFormulaModule::B_MINUS_1_LIGHT, "-1");
-		button(this, module, hpu(2.0f, 2.25f), FrankBussFormulaModule::B_0_PARAM
+		button(this, module, hpu2(2.0f, 4.5f), FrankBussFormulaModule::B_0_PARAM
 			, FrankBussFormulaModule::B_0_LIGHT, "0");
-		button(this, module, hpu(2.5f, 2.5f), FrankBussFormulaModule::B_1_PARAM
+		button(this, module, hpu2(3.0f, 5.0f), FrankBussFormulaModule::B_1_PARAM
 			, FrankBussFormulaModule::B_1_LIGHT, "1");
 
-		knob(this, module, hpu(3.0f, 2.365f), FrankBussFormulaModule::KNOB_PARAM, "KNOB");
+		knob(this, module, hpu2(6.0f, 4.75f), FrankBussFormulaModule::KNOB_PARAM, "KNOB");
 
-		okNo(this, module, hpu(5.5f, 2.25f), FrankBussFormulaModule::ERROR_LIGHT, "ERROR");
+		okNo(this, module, hpu2(0.3f, 3.75f), FrankBussFormulaModule::ERROR_LIGHT, "ERROR");
 
-		button(this, module, hpu(5.5f, 2.5f), FrankBussFormulaModule::CLAMP_PARAM
+		button(this, module, hpu2(9.0f, 5.0f), FrankBussFormulaModule::CLAMP_PARAM
 			, FrankBussFormulaModule::CLAMP_LIGHT, "CLAMP");
 
 		// bottomn row of ports
-		port(this, module, hpu(1.5f, 2.75f), FrankBussFormulaModule::W_INPUT, true, "W");
-		port(this, module, hpu(2.5f, 2.75f), FrankBussFormulaModule::X_INPUT, true, "X");
-		port(this, module, hpu(3.5f, 2.75f), FrankBussFormulaModule::Y_INPUT, true, "Y");
-		port(this, module, hpu(4.5f, 2.75f), FrankBussFormulaModule::Z_INPUT, true, "Z");
-		port(this, module, hpu(5.5f, 2.75f), FrankBussFormulaModule::FORMULA_OUTPUT, false, "OUT");
+		port(this, module, hpu2(1.0f, 5.5f), FrankBussFormulaModule::W_INPUT, true, "W");
+		port(this, module, hpu2(3.0f, 5.5f), FrankBussFormulaModule::X_INPUT, true, "X");
+		port(this, module, hpu2(5.0f, 5.5f), FrankBussFormulaModule::Y_INPUT, true, "Y");
+		port(this, module, hpu2(7.0f, 5.5f), FrankBussFormulaModule::Z_INPUT, true, "Z");
+		port(this, module, hpu2(9.0f, 5.5f), FrankBussFormulaModule::FORMULA_OUTPUT, false, "OUT");
 	}
 };
 
