@@ -1,6 +1,5 @@
 #include "UnofficialFrank.hpp"
 
-
 Plugin *pluginInstance;
 
 

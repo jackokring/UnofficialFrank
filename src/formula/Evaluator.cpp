@@ -42,7 +42,6 @@ void Action::checkTopStackElement(NumberStack& numberStack)
 	if (!isfinite(numberStack.top()) || isnan(numberStack.top())) throw MathError();
 }
 
-
 NumberAction::NumberAction(std::string value)
 {
 	m_value = atof(value.c_str());
@@ -200,12 +199,18 @@ float Evaluator::eval()
 {
 	if (m_actions.size() == 0) return 0;
 	m_numberStack.clear();
+	printf("que: %d", (int) m_actions.size());
 	for (int i = 0; i < (int) m_actions.size(); i++) {
 	    // GDB say this line fails SEGFAULT
-		printf("Action %d: %%s\n", i);//, typeid(*m_actions[i]).name());
-		// occasional /lib/x86_64-linux-gnu/libc.so.6
+		/*
+malloc(): unaligned tcache chunk detected
+
+Thread 1 "Rack" received signal SIGABRT, Aborted.
+0x00007ffff6aa095c in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+		 */
 		// tried p 1 7 all single alphanumeric, so not variable specific
-		m_actions[i]->run(m_numberStack);
+		// even commented the line that supposed gave an error
+		//m_actions[i]->run(m_numberStack);
 	}
 	return m_numberStack.pop();
 }

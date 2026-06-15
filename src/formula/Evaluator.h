@@ -41,7 +41,7 @@ class Action
 {
 public:
 	virtual ~Action() {};
-	virtual void run(NumberStack& numberStack) = 0;
+	virtual void run(NumberStack& numberStack) {};
 protected:
 	void checkTopStackElement(NumberStack& numberStack);
 };

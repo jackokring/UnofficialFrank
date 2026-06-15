@@ -1,6 +1,5 @@
 #include "UnofficialFrank.hpp"
 #include "app/ModuleWidget.hpp"
-#include "logger.hpp"
 #include "widget/Widget.hpp"
 #include <cmath>
 #include <cstdio>
