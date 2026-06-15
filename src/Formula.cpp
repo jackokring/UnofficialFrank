@@ -50,7 +50,10 @@ struct FrankBussFormulaModule : Module {
 
 	Formula formula;
 	Formula freqFormula;
-	bool compiled = false;
+	std::atomic<bool> compiled;
+	// mutex for DSP try_lock()
+	// so compilation not pulled by other threads
+	std::mutex compiling;
 	bool textDirty = false;
 	bool freqDirty = false;
 	bool doclamp = true;
@@ -141,7 +144,7 @@ struct FrankBussFormulaModule : Module {
 
 		// evaluate frequency and output formula
 		int channels = getMaxChannels();
-		if (compiled) {
+		if (compiled && compiling.try_lock()) {
 			for (int c = 0; c < channels; c++) {
 				try {
 				    float freq = freqLast[c];
@@ -177,6 +180,7 @@ struct FrankBussFormulaModule : Module {
 					compiled = false;
 				}
 			}
+			compiling.unlock();
 		} else {
 			for (int c = 0; c < channels; c++) {
 				outputs[FORMULA_OUTPUT].setVoltage(0, c);
@@ -248,6 +252,7 @@ struct FrankBussFormulaModule : Module {
 
 	void compile()
 	{
+		compiling.lock();
 		compiled = false;
 		for (int c = 0; c < PORT_MAX_CHANNELS; c++) phase[c] = 0;
 		if (textField.size() > 0) {
@@ -265,6 +270,7 @@ struct FrankBussFormulaModule : Module {
 				printf("formula exception: %s\n", e.what());
 			}
 		}
+		compiling.unlock();
 	}
 
 	void onReset (const ResetEvent &e) override
