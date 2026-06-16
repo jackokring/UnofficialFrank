@@ -93,10 +93,11 @@ struct LabelWidget : LightWidget {//TransparentWidget {
 		nvgTextAlign(args.vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 		float b[4];
 		nvgTextBounds(args.vg, 0, 0, what, NULL, b);
-		nvgRect(args.vg, b[0] - fontPad + textPos.x,
+		nvgRoundedRect(args.vg, b[0] - fontPad + textPos.x,
 		    b[1] - fontPad + textPos.y,
 		    b[2] - b[0] + 2 * fontPad,
-		    b[3] - b[1] + 2 * fontPad);
+		    b[3] - b[1] + 2 * fontPad,
+		    2.0f);
 		nvgStroke(args.vg);
 		nvgStrokeWidth(args.vg, 2.0f);
 		nvgText(args.vg, textPos.x, textPos.y, what, NULL);
