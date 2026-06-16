@@ -25,6 +25,7 @@ Simplicity is often the key to a good module.
 - [X] `f` is for frequency (delayed by one sample)
 - [X] `l` is for lowpass filter (delayed by one sample, 'f' relative)
 - [X] `par(p)` is for parabolic phase `4*p*(1-p)`
+- [X] `sub(p)` is for `p/2-0.5` (suboscillation multiplier for `par(p)`)
 - [X] queing and unquing to `PORT_MAX_CHANNELS` (crosstalk)
  - [X] `que(x)` is for queuing (`que` evaluates to `x`)
  - [X] `unq(i)` is for unqueueing (index `i` is tail offset, 0 for tail)
