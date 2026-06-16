@@ -376,7 +376,7 @@ struct FrankBussFormulaWidget : ModuleWidget {
 		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/formula.svg")));
 		screws(this, WIDTH_MODULE);
 
-		lcd(this, module, hpu2(0.5f, 1.0f), hpu2(10.0f, 2.5f), textField, TEXT, true);
+		lcd(this, module, hpu2(0.5f, 1.0f), hpu2(10.0f, 2.57f), textField, TEXT, true);
 		lcd(this, module, hpu2(1.7f, 3.7f), hpu2(8.8f, 0.5f), freqField, FREQ, false);
 
 		button(this, module, hpu2(1.0f, 4.9f), FrankBussFormulaModule::B_MINUS_1_PARAM
