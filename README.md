@@ -28,6 +28,8 @@ Simplicity is often the key to a good module.
 - [X] queing and unquing to `PORT_MAX_CHANNELS` (crosstalk)
  - [X] `que(x)` is for queuing (`que` evaluates to `x`)
  - [X] `unq(i)` is for unqueueing (index `i` is tail offset, 0 for tail)
+- [X] `expm1(x)` is for `exp(x) - 1` (zero DC audio bias)
+- [X] `log1p(x)` is for `log(1 + x)` (zero DC audio bias)
 - [X] fuzzy equality/inequality (within 1 V)
 - [X] optimized and threaded
 - [X] new front panel layout

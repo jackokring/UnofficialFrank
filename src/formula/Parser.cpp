@@ -14,6 +14,7 @@
 #include "../UnofficialFrank.hpp"
 #include "engine/Port.hpp"
 
+#include <cmath>
 #include <math.h>
 #include <time.h>
 
@@ -83,6 +84,10 @@ Parser::Parser(std::string expression)
 	setFunction("floor", floorf);
 	setFunction("max", ParserMax);
 	setFunction("min", ParserMin);
+
+	// oldies
+	setFunction("expm1", expm1);
+	setFunction("log1p", log1p);
 
 	// new
 	setFunction("par", ParserPar);// Parabolic
