@@ -23,6 +23,7 @@ struct FrankBussFormulaModule : Module {
 		B_MINUS_1_PARAM,
 		B_0_PARAM,
 		B_1_PARAM,
+		CHANNELS_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
@@ -82,6 +83,7 @@ struct FrankBussFormulaModule : Module {
 	//new
 	float formulaC;
 	float formulaF;
+	float formulaM;
 
 	// locals but time delayed for breaking loops of reference
 	float freqLast[PORT_MAX_CHANNELS] = { 0.0f };
@@ -92,6 +94,7 @@ struct FrankBussFormulaModule : Module {
 		configButton(B_0_PARAM, "Variable 'b': 0");
 		configButton(B_1_PARAM, "Variable 'b': 1");
 		configParam(KNOB_PARAM, -1.0f, 1.0f, 0.0f, "Variable 'k'");
+		configParam(CHANNELS_PARAM, 0.5f, PORT_MAX_CHANNELS + 0.5f, 1.0f, "Channels 'm'");
 		configButton(CLAMP_PARAM, "Clamp to -5V/+5V");
 
 		configLight(ERROR_LIGHT, "Status:\n  green light: ok\n  red blinking light: error\n  -------------------------------\n ");
@@ -101,15 +104,6 @@ struct FrankBussFormulaModule : Module {
 		configInput(Z_INPUT, "Variable 'z'");
 		configInput(W_INPUT, "Variable 'w'");
 		configOutput(FORMULA_OUTPUT, "Result");
-	}
-
-	int getMaxChannels() {
-		int channels = inputs[W_INPUT].getChannels();
-		channels = max(channels, inputs[X_INPUT].getChannels());
-		channels = max(channels, inputs[Y_INPUT].getChannels());
-		channels = max(channels, inputs[Z_INPUT].getChannels());
-		if (channels == 0) channels = 1;
-		return channels;
 	}
 
 	void process(const ProcessArgs &args) override {
@@ -129,7 +123,15 @@ struct FrankBussFormulaModule : Module {
 		float deltaTime = args.sampleTime;
 
 		// evaluate frequency and output formula
-		int channels = getMaxChannels();
+
+		formulaM = (params[CHANNELS_PARAM].getValue() + 0.5f);
+		int channels = (int)formulaM;
+
+		int channelsW = max(inputs[W_INPUT].getChannels(), 1);
+		int channelsX = max(inputs[X_INPUT].getChannels(), 1);
+		int channelsY = max(inputs[Y_INPUT].getChannels(), 1);
+		int channelsZ = max(inputs[Z_INPUT].getChannels(), 1);
+
 		if (compiled && compiling.try_lock()) {
 			for (int c = 0; c < channels; c++) {
 				try {
@@ -137,13 +139,13 @@ struct FrankBussFormulaModule : Module {
 					formulaP = phase[c];
 					formulaK = params[KNOB_PARAM].getValue();
 					formulaB = radiobutton;
-					formulaW = inputs[W_INPUT].getVoltage(c);
-					formulaX = inputs[X_INPUT].getVoltage(c);
-					formulaY = inputs[Y_INPUT].getVoltage(c);
-					formulaZ = inputs[Z_INPUT].getVoltage(c);
+					formulaW = inputs[W_INPUT].getVoltage(c % channelsW);
+					formulaX = inputs[X_INPUT].getVoltage(c % channelsX);
+					formulaY = inputs[Y_INPUT].getVoltage(c % channelsY);
+					formulaZ = inputs[Z_INPUT].getVoltage(c % channelsZ);
 
 					// new
-					formulaC = (float)c; // assign channel index to formulaC
+					formulaC = (float)(c + 1); // assign channel index * something
 					formulaF = freqLast[c]; // frquency
 
 					if (freqFormulaEnabled) {
@@ -214,6 +216,7 @@ struct FrankBussFormulaModule : Module {
 		// new
 		formula.setVariable("c", &formulaC);// channel index
 		formula.setVariable("f", &formulaF);// frequency (delayed by a sample)
+		formula.setVariable("m", &formulaM);// number of channels-ish
 
 		formula.setExpression(expr);
 	}
@@ -362,6 +365,8 @@ struct FrankBussFormulaWidget : ModuleWidget {
 			, FrankBussFormulaModule::B_1_LIGHT, "1");
 
 		knob(this, module, hpu2(6.0f, 4.85f), FrankBussFormulaModule::KNOB_PARAM, "KNOB");
+
+		knobSmall(this, module, hpu2(7.75f, 4.4f), FrankBussFormulaModule::CHANNELS_PARAM, "POLY");
 
 		okNo(this, module, hpu2(0.3f, 3.8f), FrankBussFormulaModule::ERROR_LIGHT, "E");
 

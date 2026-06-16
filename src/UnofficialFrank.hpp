@@ -20,3 +20,4 @@ void port(ModuleWidget* w, Module* m, Vec pos, int portId, bool isInput, const c
 void button(ModuleWidget* w, Module* m, Vec pos, int buttId, int lightId, const char* name);
 void okNo(ModuleWidget* w, Module* m, Vec pos, int portId, const char* name);
 void knob(ModuleWidget* w, Module* m, Vec pos, int paramId, const char* name);
+void knobSmall(ModuleWidget* w, Module* m, Vec pos, int paramId, const char* name);

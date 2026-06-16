@@ -128,3 +128,8 @@ void knob(ModuleWidget* w, Module* m, Vec pos, int paramId, const char* name) {
 	w->addParam(createParamCentered<RoundBlackKnob>(pos + alignCtl, m, paramId));
 	w->addChild(new LabelWidget(name, pos + alignCtl + Vec(0, -23.0f), 0));
 }
+
+void knobSmall(ModuleWidget* w, Module* m, Vec pos, int paramId, const char* name) {
+	w->addParam(createParamCentered<RoundSmallBlackKnob>(pos + alignCtl, m, paramId));
+	w->addChild(new LabelWidget(name, pos + alignCtl + Vec(0, -18.0f), 0));
+}
