@@ -25,7 +25,17 @@ Simplicity is often the key to a good module.
 - [X] `f` is for frequency (delayed by one sample)
 - [X] `l` is for lowpass filter (delayed by one sample, 'f' relative)
 - [X] `par(p)` is for parabolic phase `4*p*(1-p)`
+- [X] queing and unquing to `PORT_MAX_CHANNELS` (crosstalk)
+ - [X] `que(x)` is for queuing (`que` evaluates to `x`)
+ - [X] `unq(i)` is for unqueueing (index `i` is tail offset, 0 for tail)
 - [X] fuzzy equality/inequality (within 1 V)
 - [X] optimized and threaded
 - [X] new front panel layout
 - [X] 11 HP
+
+### Notes
+
+This is a modulation source. Using `f` or `l` in the frequency formula (lower text box)
+might sometimes be good, but can lead to very high frequencies at large amplitudes.
+You are advised to place a lowpass filter after this module if you are listening
+to the output directly, as the high-frequency artifacts can be very loud.

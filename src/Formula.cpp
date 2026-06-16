@@ -175,7 +175,11 @@ struct FrankBussFormulaModule : Module {
 					outputs[FORMULA_OUTPUT].setVoltage(val, c);
 				} catch (MathError&) {
 					// ignore math errors, e.g. division by zero
-					outputs[FORMULA_OUTPUT].setVoltage(0, c);
+					float val = 0.0f;
+					// good for impulse glitch control
+					setFilter(freqLast[c] * lowpass, args.sampleRate, &filterF1, &filterF2);
+					val = processFilter(val, &filters[c], filterF1, filterF2);
+					outputs[FORMULA_OUTPUT].setVoltage(val, c);
 				} catch (exception&) {
 					// for all other exceptions, set compiled to false, e.g. VariableNotFound
 					compiled = false;

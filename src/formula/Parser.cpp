@@ -11,6 +11,8 @@
 #include "Token.h"
 #include "Parser.h"
 #include "Exception.h"
+#include "../UnofficialFrank.hpp"
+#include "engine/Port.hpp"
 
 #include <math.h>
 #include <time.h>
@@ -34,6 +36,24 @@ float ParserTime()
 float ParserPar(float phase)
 {
 	return 4.0f * phase * (1.0f - phase);
+}
+
+// ring buffer
+float ring[PORT_MAX_CHANNELS] = { 0.0f };
+int head = 0;
+int tail = 0;
+
+float ParserRing(float value)
+{
+	ring[head] = value;
+	head = (head + 1) % PORT_MAX_CHANNELS;
+	return value;
+}
+
+float ParseResolve(float index)
+{
+	return ring[(uint)((tail = (tail + 1) % PORT_MAX_CHANNELS)
+	    - 1 + (int)(index + 0.5f)) % PORT_MAX_CHANNELS];
 }
 
 Parser::Parser(std::string expression)
@@ -65,7 +85,9 @@ Parser::Parser(std::string expression)
 	setFunction("min", ParserMin);
 
 	// new
-	setFunction("par", ParserPar);
+	setFunction("par", ParserPar);// Parabolic
+	setFunction("que", ParserRing);// Queue
+	setFunction("unq", ParseResolve);// Unqueue
 
 	setExpression(expression);
 }
