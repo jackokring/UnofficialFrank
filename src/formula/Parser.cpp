@@ -53,7 +53,7 @@ float ParserRing(float value)
 
 float ParseResolve(float index)
 {
-	return ring[(uint)((tail = (tail + 1) % PORT_MAX_CHANNELS)
+	return ring[(unsigned int)((tail = (tail + 1) % PORT_MAX_CHANNELS)
 	    - 1 + (int)(index + 0.5f)) % PORT_MAX_CHANNELS];
 }
 
