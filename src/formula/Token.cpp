@@ -19,9 +19,10 @@ void OperatorToken::eval(Parser& parser)
 	        !dynamic_cast<OpenBracketToken*>(nextToken) &&
 	        !dynamic_cast<NumberToken*>(nextToken) &&
 	        !dynamic_cast<NotToken*>(nextToken) &&
-	        !dynamic_cast<SubToken*>(nextToken))
+	        !dynamic_cast<SubToken*>(nextToken) &&
+	        !dynamic_cast<DivToken*>(nextToken))
 	{
-		throw SyntaxError("Expecting a variable, function, '(', number, not or negate operator.");
+		throw SyntaxError("Expecting a variable, function, '(', number, not, reciprocal or negate operator.");
 	}
 
 	// eval

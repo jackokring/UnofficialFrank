@@ -142,7 +142,8 @@ struct FrankBussFormulaModule : Module {
 
 		// evaluate channels
 		formulaM = (params[CHANNELS_PARAM].getValue() + 0.5f);
-		int channels = (int)(formulaM + 0.5f);
+		// already have channels from formulaM integer part
+		int channels = (int)formulaM;
 
 		int channelsW = max(inputs[W_INPUT].getChannels(), 1);
 		int channelsX = max(inputs[X_INPUT].getChannels(), 1);
