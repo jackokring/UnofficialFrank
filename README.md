@@ -43,7 +43,7 @@ Simplicity is often the key to a good module.
 - [X] added monadic `/` (monadic `/` is for prefix reciprocal)
 - [X] fuzzy equality/inequality (within 1 V)
 - [X] fuzzy `&` and `|`
-- [X] diabled unnecessary exception code
+- [X] diabled unnecessary exception code (`NaN`, `Inf` no `if`)
 - [X] optimized and threaded
 - [X] new front panel layout
 - [X] 11 HP
