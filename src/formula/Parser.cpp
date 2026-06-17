@@ -19,6 +19,11 @@
 #include <math.h>
 #include <random>
 
+float ParserTanp(float x)
+{
+	return fast_tan_pade55(x * M_PI);
+}
+
 // randoms
 std::normal_distribution<float> noise;
 std::exponential_distribution<float> expo;
@@ -93,12 +98,13 @@ Parser::Parser(std::string expression)
 	setFunction("sqrt", sqrtf);
 	setFunction("ceil", ceilf);
 	setFunction("floor", floorf);
+	// let's keep it float people!
 	setFunction("max", fmaxf);
 	setFunction("min", fminf);
 
 	// oldies
-	setFunction("expm1", expm1);
-	setFunction("log1p", log1p);
+	setFunction("expm1", expm1f);
+	setFunction("log1p", log1pf);
 
 	// new
 	setFunction("par", ParserPar);// Parabolic
@@ -108,6 +114,9 @@ Parser::Parser(std::string expression)
 	setFunction("uni", ParserUni);// Uniform distribution
 	setFunction("exd", ParserExpo);// Exponential distribution
 	setFunction("poi", ParserPoisson);// Poisson distribution
+
+	setFunction("tanp", ParserTanp);// Tan pade 5/5
+	setFunction("cbrt", cbrtf);// Cube root
 
 	setExpression(expression);
 }

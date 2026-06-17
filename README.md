@@ -20,14 +20,14 @@ Simplicity is often the key to a good module.
 
 ### Extras
 
-- [X] `c` is for channel number (1 to 16)
+- [X] `c` is for channel number (1 to 16) ... not cookie?
 - [X] `m` is for set poly out (1 to 16) ... ish!
 - [X] `f` is for frequency (delayed by one sample)
-- [X] `l` is for lowpass filter (delayed by one sample, 'f' relative)
+- [X] `l` is for lowpass filter (delayed by one sample, `f` relative)
 - [X] `s` is for suboscillation multiplier (for unipolar signals like `par(p)`)
 - [X] `r` is for sample rate
 - [X] `par(p)` is for parabolic phase `4*p*(1-p)`
-- [X] queing and unquing to `PORT_MAX_CHANNELS` (crosstalk)
+- [X] queing and unquing FIFO to `PORT_MAX_CHANNELS` (crosstalk)
   - [X] `que(x)` is for queuing (`que` evaluates to `x`)
   - [X] `unq(i)` is for unqueueing (index `i` is tail offset, 0 for tail)
 - [X] `expm1(x)` is for `exp(x) - 1` (zero-er DC audio bias)
@@ -36,6 +36,8 @@ Simplicity is often the key to a good module.
 - [X] `uni(gain)` is for uniform distribution (0 to `gain`)
 - [X] `exd(gain)` is for exponential distribution
 - [X] `poi(gain)` is for Poisson distribution
+- [X] `tanp(x)` is for `tan(pi*x)` by fast Pade approximation (5/5)
+- [X] `cbrt(x)` is for cube root (a favorite distortion)
 - [X] fuzzy equality/inequality (within 1 V)
 - [X] optimized and threaded
 - [X] new front panel layout
