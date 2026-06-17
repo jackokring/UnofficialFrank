@@ -141,9 +141,10 @@ struct FrankBussFormulaModule : Module {
 		float deltaTime = args.sampleTime;
 
 		// evaluate channels
-		formulaM = (params[CHANNELS_PARAM].getValue() + 0.5f);
+		formulaM = params[CHANNELS_PARAM].getValue();
 		// already have channels from formulaM integer part
-		int channels = (int)formulaM;
+		int channels = (int)(formulaM + 0.5f);// in range [1, 16]
+		// bug precesion completed level C
 
 		int channelsW = max(inputs[W_INPUT].getChannels(), 1);
 		int channelsX = max(inputs[X_INPUT].getChannels(), 1);
