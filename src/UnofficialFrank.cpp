@@ -82,13 +82,13 @@ struct LabelWidget : LightWidget {//TransparentWidget {
 		float boldAlter = 1.0f;
 		switch(kind) {
 			case -1:// IN
-				textColor = nvgRGB(0, 255, 0);
+				textColor = nvgRGB(0, 160, 0);
 				break;
 			case 0: default: // NORMAL
-				textColor = nvgRGB(0, 0, 255);
+				textColor = nvgRGB(0, 96, 255);
 				break;
 			case 1: // OUT
-				textColor = nvgRGB(255, 0, 0);
+				textColor = nvgRGB(255, 16, 0);
 				break;
 			case 2: // TITLE
 				textColor = nvgRGB(127, 127, 255);
