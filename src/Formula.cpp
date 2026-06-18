@@ -400,7 +400,7 @@ struct FrankBussFormulaWidget : ModuleWidget {
 	FrankBussFormulaWidget(FrankBussFormulaModule *module) {
 		setModule(module);
 
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/formula.svg")));
+		panel(this, WIDTH_MODULE, "Formula", "Frank Buss");
 		screws(this, WIDTH_MODULE);
 
 		lcd(this, module, hpu2(0.5f, 1.0f), hpu2(10.0f, 2.57f), textField, TEXT, true);

@@ -15,6 +15,7 @@ Vec hpu2(float w, float h, bool mhpw = false, bool mhph = false);
 Vec alignedUtil();
 
 void screws(ModuleWidget* widget, float hp);
+void panel(ModuleWidget* w, int hp, const char* moduleName, const char* fromName);
 
 void port(ModuleWidget* w, Module* m, Vec pos, int portId, bool isInput, const char* name);
 void button(ModuleWidget* w, Module* m, Vec pos, int buttId, int lightId, const char* name);

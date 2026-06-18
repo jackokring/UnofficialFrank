@@ -1,6 +1,9 @@
 #include "UnofficialFrank.hpp"
+#include "app/common.hpp"
 #include "componentlibrary.hpp"
 #include "helpers.hpp"
+#include "nanovg.h"
+#include <climits>
 #include <cstring>
 
 Plugin *pluginInstance;
@@ -34,16 +37,19 @@ void screws(ModuleWidget* widget, float hp) {
 	widget->addChild(createWidget<ScrewSilver>(hpu2(hp, 6, true, true)));
 }
 
-// master alignment
+// master alignment of all the widgets
+// place the top alignment here
 Vec align = hpu2(0, -0.47f);
 
 Vec alignedUtil() {
 	return align;
 }
 
-float fontPad = 2.0f;
+float fontPad = 2.0f;// padding of box around a label
 
 // align control knobs to centralize layout
+// use this to align the bottom row and indent the controls and ports
+// the displays or top alignment wont be affected by this
 Vec alignCtl = align + hpu2(0.55f, 0.25f);
 
 struct LabelWidget : LightWidget {//TransparentWidget {
@@ -73,6 +79,7 @@ struct LabelWidget : LightWidget {//TransparentWidget {
 			return;
 			} */
 		NVGcolor textColor;
+		float boldAlter = 1.0f;
 		switch(kind) {
 			case -1:// IN
 				textColor = nvgRGB(0, 255, 0);
@@ -82,6 +89,10 @@ struct LabelWidget : LightWidget {//TransparentWidget {
 				break;
 			case 1: // OUT
 				textColor = nvgRGB(255, 0, 0);
+				break;
+			case 2: // TITLE
+				textColor = nvgRGB(127, 127, 255);
+				boldAlter = 0.5f;
 				break;
 		}
 		//nvgFontFaceId(args.vg, font->handle);
@@ -94,15 +105,31 @@ struct LabelWidget : LightWidget {//TransparentWidget {
 		float b[4];
 		nvgTextBounds(args.vg, 0, 0, what, NULL, b);
 		nvgRoundedRect(args.vg, b[0] - fontPad + textPos.x,
-		    b[1] - fontPad + textPos.y,
+		    b[1] - fontPad * boldAlter + textPos.y,
 		    b[2] - b[0] + 2 * fontPad,
-		    b[3] - b[1] + 2 * fontPad,
+		    b[3] - b[1] + 2 * fontPad * boldAlter,
 		    2.0f);
 		nvgStroke(args.vg);
-		nvgStrokeWidth(args.vg, 2.0f);
-		nvgText(args.vg, textPos.x, textPos.y, what, NULL);
+		if(kind == 2) {//title bold
+		    for(int x = -1; x < 2; ++x) {
+		        nvgText(args.vg, textPos.x + x, textPos.y, what, NULL);
+		    }
+		} else {
+		    nvgText(args.vg, textPos.x, textPos.y, what, NULL);
+		}
 	}
 };
+
+void panel(ModuleWidget* w, int hp, const char* moduleName, const char* fromName) {
+    w->setPanel(createPanel(
+                asset::plugin(pluginInstance, "res/panel-" + std::to_string(hp) + ".svg"),       // Light version
+                asset::plugin(pluginInstance, "res/panel-" + std::to_string(hp) + "-dark.svg")  // Dark version
+            ));
+	float offset = 0.27f;
+	float font = 18.0f;
+	w->addChild(new LabelWidget(moduleName, hpu2((float)hp / 2, offset), 2, font));
+	w->addChild(new LabelWidget(fromName, hpu2((float)hp / 2, 6.0f - offset), 2, font));
+}
 
 void port(ModuleWidget* w, Module* m, Vec pos, int portId, bool isInput, const char* name) {
 	if(isInput) {
