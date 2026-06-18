@@ -104,11 +104,11 @@ struct FrankBussFormulaModule : Module {
 		configButton(B_1_PARAM, "Variable 'b': 1");
 		configParam(KNOB_PARAM, -1.0f, 1.0f, 0.0f, "Variable 'k'");
 		// save a few cycles for the area and the miners
-		configParam(CHANNELS_PARAM, 0.51f, PORT_MAX_CHANNELS + 0.49f, 1.0f, "Channels 'm'");
-		configParam(LOWPASS_PARAM, -4.0f, 4.0f, 0.0f, "Lowpass 'l'");
+		configParam(CHANNELS_PARAM, 0.51f, PORT_MAX_CHANNELS + 0.49f, 1.0f, "Polyphony Variable'm'");
+		configParam(LOWPASS_PARAM, -4.0f, 4.0f, 0.0f, "Lowpass Variable 'l'");
 		configButton(CLAMP_PARAM, "Clamp to -5V/+5V");
 
-		configLight(ERROR_LIGHT, "Status:\n  green light: ok\n  red blinking light: error\n  -------------------------------\n ");
+		configLight(ERROR_LIGHT, "Status: green: ok, red blink: error");
 
 		configInput(X_INPUT, "Variable 'x'");
 		configInput(Y_INPUT, "Variable 'y'");
