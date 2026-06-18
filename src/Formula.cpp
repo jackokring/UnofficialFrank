@@ -5,7 +5,6 @@
 #include <cmath>
 #include <cstdio>
 #include "formula/Formula.h"
-#include "formula/Exception.h"
 
 //============================================
 // Enum reporting front and centre

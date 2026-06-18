@@ -14,7 +14,6 @@
 
 #include <exception>
 #include <string>
-#include <sstream>
 
 #define EXCEPTION_UNKNOWNFILENAME        "<unknown>"
 #define EXCEPTION_UNKNOWNLINENUMBER      (-1)

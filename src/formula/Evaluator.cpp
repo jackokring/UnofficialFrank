@@ -36,12 +36,6 @@ void NumberStack::push(float value)
 	}
 }
 
-
-void Action::checkTopStackElement(NumberStack& numberStack)
-{
-	//if (!isfinite(numberStack.top()) || isnan(numberStack.top())) throw MathError();
-}
-
 NumberAction::NumberAction(std::string value)
 {
 	m_value = atof(value.c_str());
@@ -50,7 +44,6 @@ NumberAction::NumberAction(std::string value)
 void NumberAction::run(NumberStack& numberStack)
 {
 	numberStack.push(m_value);
-	checkTopStackElement(numberStack);
 }
 
 
@@ -60,7 +53,6 @@ void MulAction::run(NumberStack& numberStack)
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
 	numberStack.push(op1 * op2);
-	checkTopStackElement(numberStack);
 }
 
 
@@ -68,11 +60,7 @@ void DivAction::run(NumberStack& numberStack)
 {
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
-	/* if (op2 == 0.0f) {
-		throw MathError();
-	} */
 	numberStack.push(op1 / op2);
-	checkTopStackElement(numberStack);
 }
 
 
@@ -81,7 +69,6 @@ void AddAction::run(NumberStack& numberStack)
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
 	numberStack.push(op1 + op2);
-	checkTopStackElement(numberStack);
 }
 
 void LessAction::run(NumberStack& numberStack)
@@ -89,7 +76,6 @@ void LessAction::run(NumberStack& numberStack)
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
 	numberStack.push(op1 < op2);
-	checkTopStackElement(numberStack);
 }
 
 void GreaterAction::run(NumberStack& numberStack)
@@ -97,7 +83,6 @@ void GreaterAction::run(NumberStack& numberStack)
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
 	numberStack.push(op1 > op2);
-	checkTopStackElement(numberStack);
 }
 
 void LessEqualAction::run(NumberStack& numberStack)
@@ -105,7 +90,6 @@ void LessEqualAction::run(NumberStack& numberStack)
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
 	numberStack.push(op1 <= op2);
-	checkTopStackElement(numberStack);
 }
 
 void GreaterEqualAction::run(NumberStack& numberStack)
@@ -113,7 +97,6 @@ void GreaterEqualAction::run(NumberStack& numberStack)
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
 	numberStack.push(op1 >= op2);
-	checkTopStackElement(numberStack);
 }
 
 void EqualAction::run(NumberStack& numberStack)
@@ -124,7 +107,6 @@ void EqualAction::run(NumberStack& numberStack)
 	// equality overlap of floats
 	//============================================
 	numberStack.push(max(1.0f - abs(op1 - op2), 0.0f));// a flexible float equality test
-	checkTopStackElement(numberStack);
 }
 
 void NotEqualAction::run(NumberStack& numberStack)
@@ -135,7 +117,6 @@ void NotEqualAction::run(NumberStack& numberStack)
 	// inequality overlap of floats
 	//============================================
 	numberStack.push(min(abs(op1 - op2), 1.0f));// a flexible float inequality test
-	checkTopStackElement(numberStack);
 }
 
 void AndAction::run(NumberStack& numberStack)
@@ -143,7 +124,6 @@ void AndAction::run(NumberStack& numberStack)
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
 	numberStack.push(op1 * op2);
-	checkTopStackElement(numberStack);
 }
 
 void OrAction::run(NumberStack& numberStack)
@@ -151,13 +131,11 @@ void OrAction::run(NumberStack& numberStack)
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
 	numberStack.push(op1 + op2 - op1 * op2);
-	checkTopStackElement(numberStack);
 }
 
 void NotAction::run(NumberStack& numberStack)
 {
 	numberStack.push(!numberStack.pop());
-	checkTopStackElement(numberStack);
 }
 
 void SubAction::run(NumberStack& numberStack)
@@ -165,19 +143,16 @@ void SubAction::run(NumberStack& numberStack)
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
 	numberStack.push(op1 - op2);
-	checkTopStackElement(numberStack);
 }
 
 void NegAction::run(NumberStack& numberStack)
 {
 	numberStack.push(-numberStack.pop());
-	checkTopStackElement(numberStack);
 }
 
 void InvAction::run(NumberStack& numberStack)
 {
 	numberStack.push(1.0f / numberStack.pop());
-	checkTopStackElement(numberStack);
 }
 
 void PowerAction::run(NumberStack& numberStack)
@@ -185,7 +160,6 @@ void PowerAction::run(NumberStack& numberStack)
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
 	numberStack.push(pow(op1, op2));
-	checkTopStackElement(numberStack);
 }
 
 Evaluator::~Evaluator()
@@ -261,20 +235,17 @@ void VariableAction::run(NumberStack& numberStack)
 {
 	if (!m_variableAddress) m_variableAddress = m_evaluator->getVariableAddress(m_name);
 	numberStack.push(*m_variableAddress);
-	checkTopStackElement(numberStack);
 }
 
 
 void NoArgumentFunctionAction::run(NumberStack& numberStack)
 {
 	numberStack.push(m_function());
-	checkTopStackElement(numberStack);
 }
 
 void OneArgumentFunctionAction::run(NumberStack& numberStack)
 {
 	numberStack.push(m_function(numberStack.pop()));
-	checkTopStackElement(numberStack);
 }
 
 void TwoArgumentsFunctionAction::run(NumberStack& numberStack)
@@ -282,5 +253,4 @@ void TwoArgumentsFunctionAction::run(NumberStack& numberStack)
 	float op2 = numberStack.pop();
 	float op1 = numberStack.pop();
 	numberStack.push(m_function(op1, op2));
-	checkTopStackElement(numberStack);
 }

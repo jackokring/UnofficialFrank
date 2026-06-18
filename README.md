@@ -1,14 +1,20 @@
 # Documentation and Features
 
-Experimental nightly builds only for now. No Mac builds yet. This is due to
-needing OS 14 to get a build server queue, and that server getting a 302 redirect,
-followed by a 404 on the Rack SDK download for the github build server.
+Experimental nightly builds are available, but the date and commit hash is shown on
+the asset `.vcvplugin` download files. Ignore the `Nightly Build` "release" date and
+commit hash, the downloadable `.vcvplugin` file is more upto date. I think this is
+a "feature" of the build script by `baconpaul` (with edits by me).
+
+**No Mac builds yet.** This is due to needing OS 14 to get a build server from a queue,
+and that server then getting a 302 redirect, followed by a 404 on the Rack SDK
+download, cancelling the build. Lower versions of MacOS have a queue without end.
 
 This repository contains modules that I like, but are often dormant with some good
-ideas in the issues tab. It's not to say that other modules aren't availablein the
+ideas in the issues tab. It's not to say that other modules aren't available in the
 [VCV Rack Plugin Directory](https://vcvrack.com/plugins), but this repository is a
-collection of modules that have been developed further to be more useful. Apparent
-Simplicity is often the key to a good module.
+collection of modules that have been developed further to be more useful.
+
+Apparent simplicity is often the key to a good module. Um, I need to find more ...
 
 # VCV Rack Modules by Varoius People
 
@@ -41,13 +47,13 @@ Simplicity is often the key to a good module.
 - [X] `cosp(x)` is for `cos(pi*x)` by fast Pade approximation (5/5)
 - [X] `cbrt(x)` is for cube root (a favorite distortion)
 - [X] added monadic `/` (monadic `/` is for prefix reciprocal)
-- [X] fuzzy equality/inequality (within 1 V)
+- [X] fuzzy equality/inequality (within 1 V, equality on exact samples might be unlikely)
 - [X] fuzzy `&` and `|`
 - [X] diabled unnecessary exception code (`NaN`, `Inf` no `if`)
 - [X] optimized and threaded
 - [X] new front panel layout
 - [X] 11 HP
-- [ ] SIMD branch (compiles, no cigar, the black screen no seen)
+- [ ] SIMD branch (compiles, no cigar, the black screen no seen, log files, gdb, ...)
 
 ![Unofficial Formula](docs/unofficial-formula.png "Unofficial Formula")
 
